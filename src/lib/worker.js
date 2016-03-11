@@ -15,7 +15,12 @@ var hostIpAndPort = false;
 
 var init = function(done) {
   //Borrowed from here: http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js
-  var hostName = os.hostname();
+  // need to use service name which is hostname without the trailing -xxxxx  ie mongo-1-adskl should be mongo-1.
+  // hostname started giving me problems "no route to host".  using the service makes it work 100% of the time.
+  var h = os.hostname();
+  var namestr = h.split("-");
+  hostName = namestr[0] + "-" + namestr[1];
+  
   dns.lookup(hostName, function (err, addr) {
     if (err) {
       return done(err);
